@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convert GL to Genta</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="/api/index.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="toggle-container">
+            <span id="toggleText">GL</span>
+            <div id="toggleSwitch" class="toggle-switch">
+                <div class="toggle-button"></div>
+            </div>
+        </div>
+        
+
+        <div class="input-section">
+            <h2>Input Teks</h2>
+            <textarea id="inputText" placeholder="Masukkan teks di sini..."></textarea>
+            <button class="btn" onclick="handleTextInput()">Proses Teks</button>
+        </div>
+        
+        <div class="input-section">
+            <h2>Input File</h2>
+            <input type="file" id="inputFile" accept=".txt">
+            <button class="btn" onclick="handleFileInput()">Proses File</button>
+        </div>
+        
+        <h2>Output</h2>
+        <pre id="outputText" class="output"></pre>
+    </div>
+</body>
+</html>
