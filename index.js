@@ -40,8 +40,16 @@ function getMappings() {
 
 function convertText(text) {
     const mappings = getMappings();
+
     Object.keys(mappings).forEach(key => {
-        const regex = new RegExp(`(\\b${key}\\b|${key}\\s*=|${key}=)`, 'g');
+        let regex;
+        if (/^\[\d+\]$/.test(key)) {
+
+            regex = new RegExp(`\\${key}`, 'g'); 
+        } else {
+
+            regex = new RegExp(`(\\b${key}\\b|${key}\\s*=|${key}=)`, 'g');
+        }
         text = text.replace(regex, mappings[key]);
     });
 
@@ -49,8 +57,12 @@ function convertText(text) {
         let newContent = content;
 
         Object.keys(mappings).forEach(key => {
-
-            const regex = new RegExp(`(\\b${key}\\b|${key}\\s*=|${key}=)`, 'g');
+            let regex;
+            if (/^\[\d+\]$/.test(key)) {
+                regex = new RegExp(`\\${key}`, 'g');
+            } else {
+                regex = new RegExp(`(\\b${key}\\b|${key}\\s*=|${key}=)`, 'g');
+            }
             newContent = newContent.replace(regex, mappings[key]);
         });
 
@@ -59,6 +71,7 @@ function convertText(text) {
 
     return text;
 }
+
 
 function processText(inputText) {
     const outputText = convertText(inputText);
