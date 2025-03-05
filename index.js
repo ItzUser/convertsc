@@ -1,13 +1,12 @@
-
 const glMappings = {
     'getLocal': 'GetLocal',
     'sendPacket': 'SendPacket',
     'pos.x': 'posX',
     'pos.y': 'posY',
-    'punchx =': 'px =',
-    'punchy =': 'py =',
-    'punchx =': 'px=',
-    'punchy =': 'py=',
+    'punchx': 'px',
+    'punchy': 'py',
+    'punchx': 'px',
+    'punchy': 'py',
     'sleep': 'Sleep',
     'getPlayerByNetID': 'GetPlayerByNetID',
     'getWorldObject': 'GetObjectList',
@@ -26,18 +25,14 @@ const glMappings = {
     '[1]': 'v2',
     '[2]': 'v3',
     '[3]': 'v4',
-//    'id': 'oid',
 };
-
 
 const gentaMappings = {};
 Object.keys(glMappings).forEach(key => {
     gentaMappings[glMappings[key]] = key;
 });
 
-
 let isGlMode = true;
-
 
 function getMappings() {
     return isGlMode ? glMappings : gentaMappings;
@@ -46,19 +41,30 @@ function getMappings() {
 function convertText(text) {
     const mappings = getMappings();
     Object.keys(mappings).forEach(key => {
-        const regex = new RegExp(`\\b${key}\\s*=\\s*|\\b${key}\\s*`, 'g'); 
+        const regex = new RegExp(`(\\b${key}\\b|${key}\\s*=|${key}=)`, 'g');
         text = text.replace(regex, mappings[key]);
     });
+
+    text = text.replace(/\{([^}]+)\}/g, (match, content) => {
+        let newContent = content;
+
+        Object.keys(mappings).forEach(key => {
+
+            const regex = new RegExp(`(\\b${key}\\b|${key}\\s*=|${key}=)`, 'g');
+            newContent = newContent.replace(regex, mappings[key]);
+        });
+
+        return `{${newContent}}`;
+    });
+
     return text;
 }
-
 
 function processText(inputText) {
     const outputText = convertText(inputText);
     downloadOutput(outputText, 'output.txt');
     return outputText;
 }
-
 
 function processFile(file, callback) {
     const reader = new FileReader();
@@ -71,7 +77,6 @@ function processFile(file, callback) {
     reader.readAsText(file);
 }
 
-
 function downloadOutput(content, filename) {
     const blob = new Blob([content], { type: 'text/plain' });
     const link = document.createElement('a');
@@ -81,13 +86,11 @@ function downloadOutput(content, filename) {
     URL.revokeObjectURL(link.href);
 }
 
-
 function handleTextInput() {
     const inputText = document.getElementById('inputText').value;
     const outputText = processText(inputText);
     document.getElementById('outputText').textContent = outputText;
 }
-
 
 function handleFileInput() {
     const fileInput = document.getElementById('inputFile');
